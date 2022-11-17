@@ -25,10 +25,11 @@ public class StudyDashboard {
         GHRepository repository = gitHub.getRepository("whiteship/live-study");
         GHIssue issue = repository.getIssue(30);
 
-        List<GHIssueComment> comments = issue.getComments();
-        for (GHIssueComment comment : comments) {
-            usernames.add(comment.getUserName());
-            this.reviews.add(comment.getBody());
+        //리뷰를 불러오는 메서드인데 리뷰 관련 이름이 아무것도 없다..?
+        List<GHIssueComment> reviews = issue.getComments();
+        for (GHIssueComment review : reviews) {
+            usernames.add(review.getUserName());
+            this.reviews.add(review.getBody());
         }
     }
 
@@ -43,7 +44,10 @@ public class StudyDashboard {
     public static void main(String[] args) throws IOException {
         StudyDashboard studyDashboard = new StudyDashboard();
         studyDashboard.loadReviews();
+
+        //람다식 안의 변수 이름 할당 -> 간추려서 쓰기도 함 (왜? 어떤 변수인지 이미 알고 있기 때문에 !)
         studyDashboard.getUsernames().forEach(name -> System.out.println(name));
+//        studyDashboard.getUsernames().forEach(System.out::println); >> 인텔리제이가 알아서 간편하게 바꿔줌. 이런 경우 변수 정의를 안해도 됨
         studyDashboard.getReviews().forEach(review -> System.out.println(review));
     }
 }

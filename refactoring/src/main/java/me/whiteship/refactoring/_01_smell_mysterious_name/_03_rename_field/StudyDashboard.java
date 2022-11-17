@@ -12,9 +12,12 @@ import java.util.Set;
 
 public class StudyDashboard {
 
-    private Set<String> usernames = new HashSet<>();
+    //필드 1
+//    private Set<String> reviewers = new HashSet<>();
+    private Set<StudyReview> studyReviews = new HashSet<>();
 
-    private Set<String> reviews = new HashSet<>();
+    //필드 2
+//    private Set<String> reviews = new HashSet<>();
 
     /**
      * 스터디 리뷰 이슈에 작성되어 있는 리뷰어 목록과 리뷰를 읽어옵니다.
@@ -27,23 +30,37 @@ public class StudyDashboard {
 
         List<GHIssueComment> reviews = issue.getComments();
         for (GHIssueComment review : reviews) {
-            usernames.add(review.getUserName());
-            this.reviews.add(review.getBody());
+//            reviewers.add(review.getUserName());
+//            this.reviews.add(review.getBody());
+            studyReviews.add(new StudyReview(review.getUserName(), review.getBody()));
+
+//            StudyReview studyReview = new StudyReview(review.getUserName(), review.getBody());
+//
+//            System.out.println(studyReview.reviewer());
+//            System.out.println(studyReview.review());
+//
+//            studyReviews.add(studyReview);
+
         }
     }
 
-    public Set<String> getUsernames() {
-        return usernames;
+    public Set<StudyReview> getStudyReviews() {
+        return studyReviews;
     }
 
-    public Set<String> getReviews() {
-        return reviews;
-    }
+//        public Set<String> getReviewers() {
+//        return reviewers;
+//    }
+
+//    public Set<String> getReviews() {
+//        return reviews;
+//    }
 
     public static void main(String[] args) throws IOException {
         StudyDashboard studyDashboard = new StudyDashboard();
         studyDashboard.loadReviews();
-        studyDashboard.getUsernames().forEach(System.out::println);
-        studyDashboard.getReviews().forEach(System.out::println);
+//        studyDashboard.getReviewers().forEach(System.out::println);
+//        studyDashboard.getReviews().forEach(System.out::println);
+        studyDashboard.getStudyReviews().forEach(System.out::println);
     }
 }

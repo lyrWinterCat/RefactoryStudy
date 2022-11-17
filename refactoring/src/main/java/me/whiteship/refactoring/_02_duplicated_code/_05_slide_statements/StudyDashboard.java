@@ -30,6 +30,8 @@ public class StudyDashboard {
         GHRepository repository = gitHub.getRepository("whiteship/live-study");
         GHIssue issue = repository.getIssue(30);
 
+        // 이동하고 싶은 라인에 커서 + alt + shift + 방향키
+
         // Get reviewers
         Set<String> reviewers = new HashSet<>();
         issue.getComments().forEach(c -> reviewers.add(c.getUserName()));
