@@ -34,6 +34,15 @@ public class StudyDashboard {
     private void print() throws IOException, InterruptedException {
         GHRepository ghRepository = getGhRepository();
 
+        //최종 분리 for문 메서드 - 깔끔 ^^
+        checkGithubIssue(ghRepository);
+
+        new StudyPrinter(this.totalNumberOfEvents, this.participants).execute();
+        printFirstParticipants();
+    }
+
+    private void checkGithubIssue(GHRepository ghRepository) throws InterruptedException {
+        //멀티 스레드 프로그래밍
         ExecutorService service = Executors.newFixedThreadPool(8);
         CountDownLatch latch = new CountDownLatch(totalNumberOfEvents);
 
@@ -44,19 +53,14 @@ public class StudyDashboard {
                 public void run() {
                     try {
                         GHIssue issue = ghRepository.getIssue(eventId);
-                        List<GHIssueComment> comments = issue.getComments();
-                        Date firstCreatedAt = null;
-                        Participant first = null;
+                        List<GHIssueComment> comments = issue.getComments(); // 성능 bottleneck 1 (병목현상) - Git API 사용
 
-                        for (GHIssueComment comment : comments) {
-                            Participant participant = findParticipant(comment.getUserName(), participants);
-                            participant.setHomeworkDone(eventId);
+                        // 하나의 for문에 하나의 기능만 ! 분리
 
-                            if (firstCreatedAt == null || comment.getCreatedAt().before(firstCreatedAt)) {
-                                firstCreatedAt = comment.getCreatedAt();
-                                first = participant;
-                            }
-                        }
+                        //수정 1 - 메서드 분리
+                        checkHomework(comments, eventId);
+                        // 수정 2 - 메서드 분리
+                        Participant first = findFirst(comments);
 
                         firstParticipantsForEachEvent[eventId - 1] = first;
                         latch.countDown();
@@ -69,9 +73,27 @@ public class StudyDashboard {
 
         latch.await();
         service.shutdown();
+    }
 
-        new StudyPrinter(this.totalNumberOfEvents, this.participants).execute();
-        printFirstParticipants();
+    private Participant findFirst(List<GHIssueComment> comments) throws IOException {
+        Date firstCreatedAt = null;
+        Participant first = null;
+        for (GHIssueComment comment : comments) {
+            Participant participant = findParticipant(comment.getUserName(), participants); // 성능 bottleneck 2
+
+            if (firstCreatedAt == null || comment.getCreatedAt().before(firstCreatedAt)) {
+                firstCreatedAt = comment.getCreatedAt();
+                first = participant;
+            }
+        }
+        return first;
+    }
+
+    private void checkHomework(List<GHIssueComment> comments, int eventId) {
+        for (GHIssueComment comment : comments) {
+            Participant participant = findParticipant(comment.getUserName(), participants); // 성능 bottleneck 2
+            participant.setHomeworkDone(eventId);
+        }
     }
 
     private void printFirstParticipants() {
