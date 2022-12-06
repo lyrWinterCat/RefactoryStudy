@@ -5,15 +5,22 @@ import java.util.List;
 
 public class ProductionPlan {
 
-    private double production;
+//    private double production;
     private List<Double> adjustments = new ArrayList<>();
 
     public void applyAdjustment(double adjustment) {
         this.adjustments.add(adjustment);
-        this.production += adjustment;
+//        this.production += adjustment;
     }
 
     public double getProduction() {
-        return this.production;
+//        assert this.production == calculatedProduction();
+//        return this.production;
+        return this.adjustments.stream().mapToDouble(Double::valueOf).sum(); //인라인처리
+    }
+
+    private double calculatedProduction() {
+//        return this.adjustments.stream().reduce(0, (a, b) -> a + b);
+        return this.adjustments.stream().mapToDouble(Double::valueOf).sum();
     }
 }
