@@ -7,9 +7,8 @@ public class Bill {
     private GasUsage gasUsage;
 
     public double calculateBill() {
-        var electicityBill = electricityUsage.getAmount() * electricityUsage.getPricePerUnit();
-        var gasBill = gasUsage.getAmount() * gasUsage.getPricePerUnit();
-        return electicityBill + gasBill;
+        return electricityUsage.getElecticityBill() + gasUsage.getGasBill();
     }
-
+    
+    // 기존의 가스량 계산, 전기량 계산 메서드를 그에 맞는 클래스로 옮겨줌
 }

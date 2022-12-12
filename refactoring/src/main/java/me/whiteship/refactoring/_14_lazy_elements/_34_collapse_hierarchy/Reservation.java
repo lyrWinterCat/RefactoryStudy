@@ -5,6 +5,9 @@ import java.util.List;
 
 public class Reservation {
 
+    //refactor - pull/push members up/down 기능 사용
+    // 그렇게 자주 발생하는 리팩토링은 아니지만, 참고
+
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
@@ -15,4 +18,5 @@ public class Reservation {
 
     private boolean paid;
 
+    private String courtNumber;
 }
