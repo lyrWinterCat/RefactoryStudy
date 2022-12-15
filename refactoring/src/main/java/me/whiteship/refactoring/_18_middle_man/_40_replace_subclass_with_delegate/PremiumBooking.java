@@ -2,6 +2,7 @@ package me.whiteship.refactoring._18_middle_man._40_replace_subclass_with_delega
 
 import java.time.LocalDateTime;
 
+// 없어도 됨
 public class PremiumBooking extends Booking {
 
     private PremiumExtra extra;
@@ -11,17 +12,16 @@ public class PremiumBooking extends Booking {
         this.extra = extra;
     }
 
-    @Override
-    public boolean hasTalkback() {
-        return this.show.hasOwnProperty("talkback");
-    }
+//    @Override
+//    public boolean hasTalkback() {
+////        return this.show.hasOwnProperty("talkback");
+//        return this.premiumDelegate.hasTalkback();
+//    }
 
-    @Override
-    public double basePrice() {
-        return Math.round(super.basePrice() + this.extra.getPremiumFee());
-    }
+    // PremiumDelegate 에서 사용
+//    @Override
+//    public double basePrice() {
+//        return Math.round(super.basePrice() + this.extra.getPremiumFee());
+//    }
 
-    public boolean hasDinner() {
-        return this.extra.hasOwnProperty("dinner") && !this.isPeakDay();
-    }
 }

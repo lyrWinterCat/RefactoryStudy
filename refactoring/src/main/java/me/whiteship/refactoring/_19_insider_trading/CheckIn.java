@@ -1,11 +1,6 @@
 package me.whiteship.refactoring._19_insider_trading;
 
-import java.time.LocalDate;
-
 public class CheckIn {
-
-    public boolean isFastPass(Ticket ticket) {
-        LocalDate earlyBirdDate = LocalDate.of(2022, 1, 1);
-        return ticket.isPrime() && ticket.getPurchasedDate().isBefore(earlyBirdDate);
-    }
+// 이 메서드의 위치가 정말 여기가 맞을까..? 고민
+// isFastPass()
 }

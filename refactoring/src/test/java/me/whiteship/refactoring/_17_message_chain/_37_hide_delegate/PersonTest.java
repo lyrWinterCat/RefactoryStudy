@@ -12,7 +12,7 @@ class PersonTest {
         Person nick = new Person("nick");
         keesun.setDepartment(new Department("m365deploy", nick));
 
-        Person manager = keesun.getDepartment().getManager();
+        Person manager = keesun.getManager(); //getManager 메서드로 뽑아주기
         assertEquals(nick, manager);
     }
 

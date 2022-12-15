@@ -9,13 +9,29 @@ public class Booking {
 
     protected LocalDateTime time;
 
+    protected PremiumDelegate premiumDelegate;
+
     public Booking(Show show, LocalDateTime time) {
         this.show = show;
         this.time = time;
     }
 
+    //생성자 이름 선정이 자유로움
+    public static Booking createBooking(Show show, LocalDateTime time) {
+        return new Booking(show, time);
+    }
+
+    public static Booking createPremiumBooking(Show show, LocalDateTime time, PremiumExtra extra) {
+        Booking booking = createBooking(show, time);
+        booking.premiumDelegate = new PremiumDelegate(booking, extra); //연결코드. 가장 중요함. Premium일 때만 생성 !
+        return booking;
+    }
+
+    //hasTalkback 처리 가능 >> premiumBooking에서 hasTalkback 삭제
     public boolean hasTalkback() {
-        return this.show.hasOwnProperty("talkback") && !this.isPeakDay();
+//        return this.show.hasOwnProperty("talkback") && !this.isPeakDay();
+        return (this.premiumDelegate != null) ? this.premiumDelegate.hasTalkback() :
+                this.show.hasOwnProperty("talkback") && !this.isPeakDay();
     }
 
     protected boolean isPeakDay() {
@@ -26,7 +42,10 @@ public class Booking {
     public double basePrice() {
         double result = this.show.getPrice();
         if (this.isPeakDay()) result += Math.round(result * 0.15);
-        return result;
+        return (this.premiumDelegate != null) ? this.premiumDelegate.extendBasePrice(result) : result;
     }
 
+    public boolean hasDinner() {
+        return this.premiumDelegate != null && this.premiumDelegate.hasDinner();
+    }
 }
